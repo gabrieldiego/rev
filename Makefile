@@ -18,7 +18,7 @@ rev: $(OBJ)
 -include $(DEP)
 
 %.d: %.c
-	$(CC) $(CDFLAGS) $(subst .c,.o,$<) $<
+	$(CC) $(CDFLAGS) -Iinc/ $(subst .c,.o,$<) $<
 
 %.o: %.c $(INC)
 	$(CC) $(CFLAGS) -Iinc/ -c $< -o $@

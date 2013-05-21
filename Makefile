@@ -2,10 +2,10 @@ CDFLAGS=-MM -MF $@ -MP -MT
 
 CC=gcc
 
-SRCS=rev.c
+SRCS=rev.c config.c
 SRC=$(addprefix src/,$(SRCS))
 
-INCS=rev.h
+INCS=rev.h config.h
 INC=$(addprefix inc/,$(INCS))
 DEP=$(subst .c,.d,$(SRC))
 OBJ=$(subst .c,.o,$(SRC))

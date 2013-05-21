@@ -1,4 +1,4 @@
-CDFLAGS=-MM -MF $@ -MP -MT
+CDFLAGS=-E -MM
 
 CC=gcc
 
@@ -7,6 +7,7 @@ SRC=$(addprefix src/,$(SRCS))
 
 INCS=rev.h config.h
 INC=$(addprefix inc/,$(INCS))
+INCLUDES=-Iinc/
 DEP=$(subst .c,.d,$(SRC))
 OBJ=$(subst .c,.o,$(SRC))
 
@@ -18,10 +19,10 @@ rev: $(OBJ)
 -include $(DEP)
 
 %.d: %.c
-	$(CC) $(CDFLAGS) -Iinc/ $(subst .c,.o,$<) $<
+	$(CC) $(INCLUDES) $(CDFLAGS) $(CFLAGS) $< >> $@
 
 %.o: %.c $(INC)
-	$(CC) $(CFLAGS) -Iinc/ -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	rm -rf $(DEP) $(OBJ) rev rev.exe

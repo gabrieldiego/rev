@@ -2,53 +2,29 @@
 #include "config.h"
 
 int main(int argc, char **argv) {
-  int32_t w,h;
   int32_t num_pixels=0;
   config_t config;
-
-  if(argc < 5) {
-    fprintf(stderr,"Few arguments.\n");
-	exit(-1);
-  }
-
-  config.input_file = fopen(argv[1],"rb");
-
-  if(config.input_file == NULL) {
-    fprintf(stderr,"Could not open file %s for reading.\n",argv[1]);
-    exit(-1);
-  }
-
-  w = atoi(argv[2]);
-  h = atoi(argv[3]);
-
-  if(h <= 0 || w <= 0) {
-    fprintf(stderr,"Invalid dimensions.\n");
-    exit(-1);
-  }
-
-  config.output_file = fopen(argv[4],"wb");
-
-  if(config.output_file == NULL) {
-    fprintf(stderr,"Could not open file %s for writting.\n",argv[4]);
-    exit(-1);
-  }
 
   uint32_t i,j;
   uint32_t statistics[256];
   uint32_t statistics_diff[512];
   uint8_t *frame;
   
-  frame = malloc(h*w*3/2+1);
+  if(config_from_cmd_line(&config,argc,argv)) {
+    return -1;
+  }
+  
+  frame = malloc(config.img_size+1);
   
   if(frame == NULL) {
-    fprintf(stderr,"Could not alloc file.\n");
+    fprintf(stderr,"Não pode alocar frame buffer.\n");
     exit(-1);
   }
 
   /* Só para ter um pixel a mais no fim do frame, para poder calcular as estatisticas em DPCM */
-  frame[h*w*3/2] = 0;
+  frame[config.img_size] = 0;
 
-  if(fread(frame, 1, h*w*3/2, config.input_file) != h*w*3/2) {
+  if(fread(frame, 1, config.img_size, config.input_file) != config.img_size) {
     fprintf(stderr,"Could not read file.\n");
     exit(-1);   
   }
@@ -58,8 +34,8 @@ int main(int argc, char **argv) {
     statistics_diff[i] = 0;
   }
 
-  for(i=0; i<h*w; i+=w) {
-    for(j=0; j<w; j++) {
+  for(i=0; i<config.h*config.w; i+=config.pitch) {
+    for(j=0; j<config.w; j++) {
 	  fwrite(frame+i+j,1,1,config.output_file);
       num_pixels++;
       statistics[frame[i+j]]++;

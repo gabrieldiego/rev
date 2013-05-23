@@ -2,10 +2,10 @@ CDFLAGS=-E -MM
 
 CC=gcc
 
-SRCS=rev.c config.c
+SRCS=rev.c config.c image.c
 SRC=$(addprefix src/,$(SRCS))
 
-INCS=rev.h config.h
+INCS=rev.h config.h image.h
 INC=$(addprefix inc/,$(INCS))
 INCLUDES=-Iinc/
 DEP=$(subst .c,.d,$(SRC))

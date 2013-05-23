@@ -1,4 +1,5 @@
 #include "config.h"
+#include "image.h"
 
 int config_from_cmd_line(config_t *config, int argc, char **argv) {
   if(argc < 5) {
@@ -30,9 +31,7 @@ int config_from_cmd_line(config_t *config, int argc, char **argv) {
 
 int init_img_dimensions(config_t *config, uint32_t h, uint32_t w) {
 
-  if(w > 100000 || h > 100000) {
-    return -1;
-  }
+  check_img_dimensions(w, h, w);
 
   if(config == NULL) {
     return -1;
@@ -41,6 +40,8 @@ int init_img_dimensions(config_t *config, uint32_t h, uint32_t w) {
   config->h = h;
   config->w = w;
   config->pitch = w;
+  
+  /* Por enquanto presupomos sempre YUV 4:2:0 */
   config->img_size = h*w*3/2;
 
   return 0;

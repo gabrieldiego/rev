@@ -1,5 +1,7 @@
 #include "rev.h"
+
 #include "config.h"
+#include "image.h"
 
 int main(int argc, char **argv) {
   int32_t num_pixels=0;
@@ -9,13 +11,13 @@ int main(int argc, char **argv) {
   uint32_t statistics[256];
   uint32_t statistics_diff[512];
   uint8_t *frame;
-  
+
   if(config_from_cmd_line(&config,argc,argv)) {
     return -1;
   }
-  
+
   frame = malloc(config.img_size+1);
-  
+
   if(frame == NULL) {
     fprintf(stderr,"Não pode alocar frame buffer.\n");
     exit(-1);
@@ -26,9 +28,9 @@ int main(int argc, char **argv) {
 
   if(fread(frame, 1, config.img_size, config.input_file) != config.img_size) {
     fprintf(stderr,"Could not read file.\n");
-    exit(-1);   
+    exit(-1);
   }
-  
+
   for(i=0; i<256; i++) {
     statistics[i] = 0;
     statistics_diff[i] = 0;
@@ -54,7 +56,7 @@ int main(int argc, char **argv) {
   }
 
   printf("\nDPCM:\n");
-  
+
   for(i=0; i<256; i+=16) {
     printf("|");
     for(j=0; j<16; j++) {
@@ -64,7 +66,7 @@ int main(int argc, char **argv) {
   }
 
   printf("\nDPCM nr bits:\n");
-  
+
   for(i=0; i<256; i+=16) {
     printf("|");
     for(j=0; j<16; j++) {

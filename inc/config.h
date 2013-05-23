@@ -2,18 +2,16 @@
 #define __CONFIG_H__
 
 #include "rev.h"
-#include <stdint.h>
 
 typedef struct {
   FILE *input_file;
   FILE *output_file;
-  
+
   uint32_t h;
   uint32_t w;
   uint32_t pitch;
 
   uint32_t img_size;
-  
 } config_t;
 
 int config_from_cmd_line(config_t *config, int argc, char **argv);

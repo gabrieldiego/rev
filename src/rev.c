@@ -2,31 +2,27 @@
 
 #include "config.h"
 #include "image.h"
+#include "diff.h"
 
 int main(int argc, char **argv) {
-  int32_t num_pixels=0;
+  int32_t  num_pixels=0;
   config_t config;
+  image_t  image;
+  diff_t   diff;
 
   uint32_t i,j;
   uint32_t statistics[256];
   uint32_t statistics_diff[512];
-  uint8_t *frame;
 
   if(config_from_cmd_line(&config,argc,argv)) {
     return -1;
   }
 
-  frame = malloc(config.img_size+1);
-
-  if(frame == NULL) {
-    fprintf(stderr,"Não pode alocar frame buffer.\n");
+  if(create_img_from_config(&image,&config)) {
     exit(-1);
   }
 
-  /* Só para ter um pixel a mais no fim do frame, para poder calcular as estatisticas em DPCM */
-  frame[config.img_size] = 0;
-
-  if(fread(frame, 1, config.img_size, config.input_file) != config.img_size) {
+  if(fread(image.buffer, 1, image.img_size, config.input_file) != image.img_size) {
     fprintf(stderr,"Could not read file.\n");
     exit(-1);
   }
@@ -36,12 +32,14 @@ int main(int argc, char **argv) {
     statistics_diff[i] = 0;
   }
 
-  for(i=0; i<config.h*config.w; i+=config.pitch) {
-    for(j=0; j<config.w; j++) {
-	  fwrite(frame+i+j,1,1,config.output_file);
+  create_diff(&diff,&image);
+
+  for(i=0; i<image.h*image.w; i+=image.pitch) {
+    for(j=0; j<image.w; j++) {
+	  fwrite(image.buffer+i+j,1,1,config.output_file);
       num_pixels++;
-      statistics[frame[i+j]]++;
-      statistics_diff[abs(frame[i+j+1] - frame[i+j])]++;
+      statistics[image.buffer[i+j]]++;
+      statistics_diff[abs(diff.buffer[i+j])]++;
     }
   }
 

@@ -29,13 +29,16 @@ int create_img(image_t *img, uint32_t w, uint32_t h, uint32_t pitch) {
 }
 
 int check_img_dimensions(uint32_t w, uint32_t h, uint32_t pitch) {
+  /* Verificar se a imagem de entrada tem um tamanho razoável */
   if (w>10000 || h>10000) {
     return -1;
   }
 
+  /* Verificar se o pitch não é menor que a largura */
   if (pitch < w) {
     return -2;
   }
-  
+
+  /* Senão está tudo ok */
   return 0;
 }

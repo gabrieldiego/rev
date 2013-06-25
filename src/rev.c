@@ -3,12 +3,14 @@
 #include "config.h"
 #include "image.h"
 #include "diff.h"
+#include "huffman.h"
 
 int main(int argc, char **argv) {
   int32_t  num_pixels=0;
   config_t config;
   image_t  image;
   diff_t   diff;
+  huffman_tree_t ht;
 
   uint32_t i,j;
   uint32_t statistics[256];
@@ -34,21 +36,40 @@ int main(int argc, char **argv) {
 
   create_diff(&diff,&image);
 
-  for(i=0; i<image.h*image.w; i+=image.pitch) {
+  create_huffman_tree(&ht, image.buffer, image.img_size);
+
+  printf("height %d width %d pitch %d size %d\n",image.h,image.w,image.pitch,image.img_size);
+
+  for(i=0; i<image.h*image.pitch; i+=image.pitch) {
     for(j=0; j<image.w; j++) {
 	  fwrite(image.buffer+i+j,1,1,config.output_file);
       num_pixels++;
-      statistics[image.buffer[i+j]]++;
       statistics_diff[abs(diff.buffer[i+j])]++;
     }
   }
 
   fclose(config.output_file);
 
+  huffman_list_t *lptr = ht.list;
+
   for(i=0; i<256; i+=16) {
     printf("|");
     for(j=0; j<16; j++) {
-      printf("%5d", statistics[i+j]);
+      printf("%5d", ht.list[i+j].leaf.occurrence);
+	}
+    printf("|\n");
+
+  }
+
+  printf("\nptrs: %p\n",ht.list);
+  fflush(stdout);
+
+  for(i=0; i<256; i+=8) {
+    fprintf(stderr,"|");
+    for(j=0; j<8; j++) {
+//      fprintf(stderr,"%5d", lptr->leaf.occurrence);
+  	  lptr = lptr->bigger;
+	  fprintf(stderr," %p",lptr);
 	}
     printf("|\n");
   }

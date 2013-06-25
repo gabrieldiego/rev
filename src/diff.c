@@ -24,11 +24,8 @@ int create_diff(diff_t *output, image_t *input) {
   uint32_t w = output->w;
   uint32_t pitch = input->pitch;
 
-  for(y=1;y<input->h;y++) {
-    for(x=0;x<input->w;x++) {
-	  uint32_t input_pos = x+y*pitch;
-      output->buffer[x+y*w] = input->buffer[input_pos+1] - input->buffer[input_pos];
-    }
+  for(y=1;y<output->img_size;y++) {
+    output->buffer[y] = input->buffer[y] - input->buffer[y-1];
   }
 
   return 0;

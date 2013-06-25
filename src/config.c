@@ -32,7 +32,9 @@ int config_from_cmd_line(config_t *config, int argc, char **argv) {
 
 int init_img_dimensions(config_t *config, uint32_t h, uint32_t w) {
 
-  check_img_dimensions(w, h, w);
+  if(check_img_dimensions(w, h, w)) {
+    return -2;
+  }
 
   if(config == NULL) {
     return -1;

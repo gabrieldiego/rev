@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
 
   for(i=0; i<image.h*image.pitch; i+=image.pitch) {
     for(j=0; j<image.w; j++) {
-	  fwrite(image.buffer+i+j,1,1,config.output_file);
+      fwrite(image.buffer+i+j,1,1,config.output_file);
       num_pixels++;
       statistics_diff[abs(diff.buffer[i+j])]++;
     }
@@ -50,28 +50,13 @@ int main(int argc, char **argv) {
 
   fclose(config.output_file);
 
-  huffman_list_t *lptr = ht.list;
-
   for(i=0; i<256; i+=16) {
     printf("|");
     for(j=0; j<16; j++) {
       printf("%5d", ht.list[i+j].leaf.occurrence);
-	}
+    }
     printf("|\n");
 
-  }
-
-  printf("\nptrs: %p\n",ht.list);
-  fflush(stdout);
-
-  for(i=0; i<256; i+=8) {
-    fprintf(stderr,"|");
-    for(j=0; j<8; j++) {
-//      fprintf(stderr,"%5d", lptr->leaf.occurrence);
-  	  lptr = lptr->bigger;
-	  fprintf(stderr," %p",lptr);
-	}
-    printf("|\n");
   }
 
   printf("\nDPCM:\n");
@@ -80,7 +65,7 @@ int main(int argc, char **argv) {
     printf("|");
     for(j=0; j<16; j++) {
       printf("%5d", statistics_diff[i+j]);
-	}
+    }
     printf("|\n");
   }
 
@@ -90,7 +75,7 @@ int main(int argc, char **argv) {
     printf("|");
     for(j=0; j<16; j++) {
       printf("%6.2f", log((1.0*num_pixels)/statistics_diff[i+j])/log(2));
-	}
+    }
     printf("|\n");
   }
 

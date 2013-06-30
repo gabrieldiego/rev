@@ -28,6 +28,7 @@ typedef struct {
   huffman_node_t *one;
 
   huffman_list_t *list;
+  huffman_list_t *biggest;
   
   uint32_t num_symbols;
 } huffman_tree_t;

@@ -4,7 +4,8 @@
 int config_from_cmd_line(config_t *config, int argc, char **argv) {
   if(argc < 5) {
     fprintf(stderr,"Poucos argumentos.\n");
-    fprintf(stderr,"Uso: %s <yuv entrada> <largura> <altura> <yuv saida>.\n");
+    fprintf(stderr,"Uso: %s <yuv entrada> <largura> <altura> <yuv saida>.\n",
+      argv[0]);
 	return -1;
   }
 

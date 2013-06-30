@@ -1,15 +1,7 @@
 #include "huffman.h"
 
-int create_huffman_tree(huffman_tree_t *ht, uint8_t *input, size_t len) {
+int create_huffman_list(huffman_tree_t *ht, uint8_t *input, size_t len) {
   size_t i;
-
-  /* Cria uma lista de onde será feita a árvore de Huffman */
-  ht->list = (huffman_list_t *) malloc(sizeof(huffman_list_t)*256);
-
-  ht->num_symbols = len;
-
-  if (ht->list == NULL)
-    return -1;
 
   for(i=0;i<256;i++) {
     ht->list[i].leaf.symbol = i;
@@ -22,6 +14,7 @@ int create_huffman_tree(huffman_tree_t *ht, uint8_t *input, size_t len) {
 
   ht->list[0].smaller = NULL;
   ht->list[255].bigger= NULL;
+  ht->biggest = ht->list+255;
 
   for(i=0;i<len;i++) {
     ht->list[input[i]].leaf.occurrence++;
@@ -43,6 +36,8 @@ int create_huffman_tree(huffman_tree_t *ht, uint8_t *input, size_t len) {
         /* Ajusta o ponteiro do nodo após o maior (se existir) */
         if(bigger_ptr->bigger != NULL)
           bigger_ptr->bigger->smaller = current_ptr;
+        else 
+		  ht->biggest = current_ptr;
 
         /* Ajusta os ponteiros do nodo atual */
         current_ptr->bigger = bigger_ptr->bigger;
@@ -58,8 +53,22 @@ int create_huffman_tree(huffman_tree_t *ht, uint8_t *input, size_t len) {
       } else
         break;
     }
-    
   }
+
+  return 0;
+}
+
+int create_huffman_tree(huffman_tree_t *ht, uint8_t *input, size_t len) {
+
+  /* Cria uma lista de onde será feita a árvore de Huffman */
+  ht->list = (huffman_list_t *) malloc(sizeof(huffman_list_t)*256);
+
+  ht->num_symbols = len;
+
+  if (ht->list == NULL)
+    return -1;
+
+  create_huffman_list(ht, input, len);
 
   return 0;
 }

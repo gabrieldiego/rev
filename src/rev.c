@@ -38,7 +38,8 @@ int main(int argc, char **argv) {
 
   create_huffman_tree(&ht, image.buffer, image.img_size);
 
-  printf("height %d width %d pitch %d size %d\n",image.h,image.w,image.pitch,image.img_size);
+  printf("height %d width %d pitch %d size %d\n",
+    image.h,image.w,image.pitch,image.img_size);
 
   for(i=0; i<image.h*image.pitch; i+=image.pitch) {
     for(j=0; j<image.w; j++) {
@@ -53,7 +54,21 @@ int main(int argc, char **argv) {
   for(i=0; i<256; i+=16) {
     printf("|");
     for(j=0; j<16; j++) {
-      printf("%5d", ht.list[i+j].leaf.occurrence);
+      printf("%5d", ht.list[i+j].leaf->occurrence);
+    }
+    printf("|\n");
+
+  }
+
+  printf("\nOccurences in order:\n");
+
+  huffman_list_t *list = ht.smallest;
+
+  for(i=0; i<256; i+=16) {
+    printf("|");
+    for(j=0; j<16; j++) {
+      printf("%3d:%-5d",list->leaf->symbol,list->leaf->occurrence);
+      list = list->bigger;
     }
     printf("|\n");
 

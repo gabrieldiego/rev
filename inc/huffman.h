@@ -10,8 +10,9 @@ typedef struct {
 } huffman_leaf_t;
 
 typedef struct huffman_node_s {
-  struct huffman_node_s *zero;
-  struct huffman_node_s *one;
+  struct huffman_node_s *n[2];
+
+  uint32_t occurrence;
 
   huffman_leaf_t *leaf;
 } huffman_node_t;
@@ -20,16 +21,19 @@ typedef struct huffman_list_s {
   struct huffman_list_s *smaller;
   struct huffman_list_s *bigger;
 
-  huffman_leaf_t leaf;
+  huffman_node_t *node;
+
+  huffman_leaf_t *leaf;
 } huffman_list_t;
 
 typedef struct {
-  huffman_node_t *zero;
-  huffman_node_t *one;
+  huffman_node_t *n;
 
   huffman_list_t *list;
+
+  huffman_list_t *smallest;
   huffman_list_t *biggest;
-  
+
   uint32_t num_symbols;
 } huffman_tree_t;
 

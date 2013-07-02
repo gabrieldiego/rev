@@ -1,11 +1,11 @@
 #include "huffman.h"
 
 void adjust_symbol_in_list(huffman_tree_t *ht, huffman_list_t *current) {
+
   /* Avançar na lista caso o símbolo ocorrer mais vezes que o próximo */
   while(current->bigger != NULL) {
-
     /* Testa se simbolo adiante na lista ocorre menas vezes */
-    if(current->bigger->leaf->occurrence < current->leaf->occurrence) {
+    if(current->bigger->occurrence < current->occurrence) {
       huffman_list_t *bigger_ptr;
       huffman_list_t *smaller_ptr;
 
@@ -74,7 +74,8 @@ int create_huffman_list(huffman_tree_t *ht, uint8_t *input, size_t len) {
   ht->biggest = ht->list+255;
 
   for(i=0;i<len;i++) {
-    ht->list[input[i]].leaf->occurrence++;
+    ht->list[input[i]].occurrence = ++ht->list[input[i]].leaf->occurrence;
+
     adjust_symbol_in_list(ht,ht->list+input[i]);
   }
 
@@ -121,6 +122,7 @@ int build_huffman_tree(huffman_tree_t *ht) {
     second_smallest->leaf = NULL;
 
     node->occurrence = node->n[0]->occurrence + node->n[1]->occurrence;
+    second_smallest->occurrence = node->occurrence;
 
     /* Falta ajustar a posiçao na lista */
     ht->smallest = second_smallest;

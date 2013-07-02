@@ -21,6 +21,8 @@ typedef struct huffman_list_s {
   struct huffman_list_s *smaller;
   struct huffman_list_s *bigger;
 
+  uint32_t occurrence;
+
   huffman_node_t *node;
 
   huffman_leaf_t *leaf;

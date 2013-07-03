@@ -79,7 +79,7 @@ int create_huffman_list(huffman_tree_t *ht, uint8_t *input, size_t len) {
     adjust_symbol_in_list(ht,ht->list+input[i]);
   }
 
-  return;
+  return 0;
 }
 
 int assign_new_node(huffman_node_t **node, huffman_list_t *list) {
@@ -100,7 +100,48 @@ int assign_new_node(huffman_node_t **node, huffman_list_t *list) {
     *node = list->node;
   }
 
+  printf("bbb%p\n",node[0]);fflush(stdout);
+  printf("bbb%p\n",node[0]->leaf);fflush(stdout);
+
   return 0;
+}
+
+void print_huffman_node(huffman_node_t *node, int depth) {
+  int i;
+
+  printf("dbg1"); fflush(stdout);
+
+  if(node) {
+    printf("dbg%d",__LINE__); fflush(stdout);
+    if(node->n[0]) {
+	  printf("dbg%d",__LINE__); fflush(stdout);
+	  for(i=0;i<depth;i++) printf(" ");
+	  printf("Node   :%-5d\n",node->occurrence);
+	  print_huffman_node(node->n[0],depth+1);
+	  print_huffman_node(node->n[1],depth+1);
+	} else {
+    printf("dbg%d\n",__LINE__); fflush(stdout);
+    printf("ptr%p",node->leaf); fflush(stdout);
+	  for(i=0;i<depth;i++) printf(" ");
+	  printf("Leaf:%3d%-5d\n",node->leaf->symbol,node->occurrence);
+	}
+  } else {
+    printf("dbg%d",__LINE__); fflush(stdout);
+    for(i=0;i<depth;i++) printf(" ");
+	printf("Leaf:%3d%-5d\n",node->leaf->symbol,node->occurrence);
+  }
+}
+
+void print_huffman_tree(huffman_tree_t *ht) {
+  huffman_list_t *list;
+
+  for(list=ht->smallest; list!=NULL; list=list->bigger) {
+    if(list->node)
+      print_huffman_node(list->node,0);
+    else {
+	  printf("Leaf%3d:%-5d\n",list->leaf->symbol,list->occurrence);
+	}
+  }
 }
 
 int build_huffman_tree(huffman_tree_t *ht) {
@@ -117,6 +158,8 @@ int build_huffman_tree(huffman_tree_t *ht) {
     assign_new_node(node->n+0, ht->smallest);
     assign_new_node(node->n+1, second_smallest);
 
+    printf("aaa%p\n",node->n[0]);fflush(stdout);
+    printf("aaa%p\n",node->n[0]->leaf);fflush(stdout);
     second_smallest->smaller = NULL;
     second_smallest->node = node;
     second_smallest->leaf = NULL;
@@ -127,6 +170,9 @@ int build_huffman_tree(huffman_tree_t *ht) {
     /* Falta ajustar a posiçao na lista */
     ht->smallest = second_smallest;
 
+    adjust_symbol_in_list(ht,second_smallest);
+
+	print_huffman_tree(ht);
     break;
   } while(1);
 
@@ -134,12 +180,13 @@ int build_huffman_tree(huffman_tree_t *ht) {
 }
 
 int create_huffman_tree(huffman_tree_t *ht, uint8_t *input, size_t len) {
-
   if(create_huffman_list(ht, input, len))
     return -1;
 
-//  if(build_huffman_tree(ht))
-//    return -1;
+  if(build_huffman_tree(ht))
+    return -1;
 
   return 0;
 }
+
+

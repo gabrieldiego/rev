@@ -1,7 +1,8 @@
-#ifndef __HUFFMAN_H_
-#define __HUFFMAN_H_
+#ifndef __HUFFMAN_H__
+#define __HUFFMAN_H__
 
 #include "rev.h"
+#include "debug.h"
 
 typedef struct {
   double prob;
@@ -41,4 +42,4 @@ typedef struct {
 
 int create_huffman_tree(huffman_tree_t *ht, uint8_t *input, size_t len);
 
-#endif /* __HUFFMAN_H_ */
+#endif /* __HUFFMAN_H__ */

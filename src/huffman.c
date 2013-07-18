@@ -100,8 +100,8 @@ int assign_new_node(huffman_node_t **node, huffman_list_t *list) {
     *node = list->node;
   }
 
-  printf("bbb%p\n",node[0]);fflush(stdout);
-  printf("bbb%p\n",node[0]->leaf);fflush(stdout);
+  DEBUG_PTR(node[0])
+  DEBUG_PTR(node[0]->leaf)
 
   return 0;
 }
@@ -109,24 +109,24 @@ int assign_new_node(huffman_node_t **node, huffman_list_t *list) {
 void print_huffman_node(huffman_node_t *node, int depth) {
   int i;
 
-  printf("dbg1"); fflush(stdout);
+  DEBUG_LINE
 
   if(node) {
-    printf("dbg%d",__LINE__); fflush(stdout);
+    DEBUG_LINE
     if(node->n[0]) {
-	  printf("dbg%d",__LINE__); fflush(stdout);
+	  DEBUG_LINE
 	  for(i=0;i<depth;i++) printf(" ");
 	  printf("Node   :%-5d\n",node->occurrence);
 	  print_huffman_node(node->n[0],depth+1);
 	  print_huffman_node(node->n[1],depth+1);
 	} else {
-    printf("dbg%d\n",__LINE__); fflush(stdout);
-    printf("ptr%p",node->leaf); fflush(stdout);
+    DEBUG_LINE
+    DEBUG_PTR(node->leaf)
 	  for(i=0;i<depth;i++) printf(" ");
 	  printf("Leaf:%3d%-5d\n",node->leaf->symbol,node->occurrence);
 	}
   } else {
-    printf("dbg%d",__LINE__); fflush(stdout);
+    DEBUG_LINE
     for(i=0;i<depth;i++) printf(" ");
 	printf("Leaf:%3d%-5d\n",node->leaf->symbol,node->occurrence);
   }
@@ -158,8 +158,8 @@ int build_huffman_tree(huffman_tree_t *ht) {
     assign_new_node(node->n+0, ht->smallest);
     assign_new_node(node->n+1, second_smallest);
 
-    printf("aaa%p\n",node->n[0]);fflush(stdout);
-    printf("aaa%p\n",node->n[0]->leaf);fflush(stdout);
+    DEBUG_PTR(node->n[0])
+    DEBUG_PTR(node->n[0]->leaf)
     second_smallest->smaller = NULL;
     second_smallest->node = node;
     second_smallest->leaf = NULL;

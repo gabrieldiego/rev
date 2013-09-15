@@ -107,9 +107,10 @@ int print_huffman_list_occ(huffman_tree_t *ht) {
 }
 
 int assign_new_node(huffman_node_t **node, huffman_list_t *list) {
-
   if(list->node == NULL) {
-	*node = (huffman_node_t *) malloc(sizeof(huffman_node_t *));
+  /* Se o nodo da lista não existir, precisa alocar e copiar tudo */
+  /* Isso ocorre quando o elemento na lista for uma folha */
+	*node = (huffman_node_t *) malloc(sizeof(huffman_node_t));
 	if(*node == NULL)
 	  return -1;
 
@@ -121,11 +122,10 @@ int assign_new_node(huffman_node_t **node, huffman_list_t *list) {
     (*node)->leaf = list->leaf;
 
   } else {
+  /* Se o nodo já estiver alocado, só precisa copiar ele da lista */
+  /* Isso ocorre quando o elemento já for um nodo da árvore */
     *node = list->node;
   }
-
-  DEBUG_PTR(node[0])
-  DEBUG_PTR(node[0]->leaf)
 
   return 0;
 }
@@ -133,26 +133,19 @@ int assign_new_node(huffman_node_t **node, huffman_list_t *list) {
 void print_huffman_node(huffman_node_t *node, int depth) {
   int i;
 
-  DEBUG_LINE
-
   if(node) {
-    DEBUG_LINE
     if(node->n[0]) {
-	  DEBUG_LINE
-	  for(i=0;i<depth;i++) printf(" ");
+	  for(i=0;i<depth;i++) printf("|");
 	  printf("Node   :%-5d\n",node->occurrence);
 	  print_huffman_node(node->n[0],depth+1);
 	  print_huffman_node(node->n[1],depth+1);
 	} else {
-    DEBUG_LINE
-    DEBUG_PTR(node->leaf)
-	  for(i=0;i<depth;i++) printf(" ");
-	  printf("Leaf:%3d%-5d\n",node->leaf->symbol,node->occurrence);
+	  for(i=0;i<depth;i++) printf("|");
+	  printf("Leaf:%02X:%-5d\n",node->leaf->symbol,node->occurrence);
 	}
   } else {
-    DEBUG_LINE
-    for(i=0;i<depth;i++) printf(" ");
-	printf("Leaf:%3d%-5d\n",node->leaf->symbol,node->occurrence);
+    for(i=0;i<depth;i++) printf("|");
+	printf("Leaf:%02X:%-5d\n",node->leaf->symbol,node->occurrence);
   }
 }
 
@@ -163,7 +156,7 @@ void print_huffman_tree(huffman_tree_t *ht) {
     if(list->node)
       print_huffman_node(list->node,0);
     else {
-	  printf("Leaf%3d:%-5d\n",list->leaf->symbol,list->occurrence);
+	  printf("Leaf:%20X:%-5d\n",list->leaf->symbol,list->occurrence);
 	}
   }
 }
@@ -171,19 +164,23 @@ void print_huffman_tree(huffman_tree_t *ht) {
 int build_huffman_tree(huffman_tree_t *ht) {
   huffman_node_t *node;
   huffman_list_t *second_smallest;
+  int i;
 
-  do {
+  for (i=0; i<50; i++) {
     node = (huffman_node_t *) malloc(sizeof(huffman_node_t *));
     if(node == NULL)
       return -1;
 
+    /* Guarda o símbolo com a segunda menor probabilidade na lista */
     second_smallest = ht->smallest->bigger;
 
+    /* Atribui os dois nodos com menor probabilidade às duas folhas do 
+         novo nodo */
     assign_new_node(node->n+0, ht->smallest);
     assign_new_node(node->n+1, second_smallest);
 
-    DEBUG_PTR(node->n[0])
-    DEBUG_PTR(node->n[0]->leaf)
+    /* Reusa o  ponteiro do segundo menor nodo e coloca ele temporáriamente
+         no início da lista */
     second_smallest->smaller = NULL;
     second_smallest->node = node;
     second_smallest->leaf = NULL;
@@ -191,14 +188,15 @@ int build_huffman_tree(huffman_tree_t *ht) {
     node->occurrence = node->n[0]->occurrence + node->n[1]->occurrence;
     second_smallest->occurrence = node->occurrence;
 
-    /* Falta ajustar a posiçao na lista */
+    /* Novo nodo é colocado no início da lista */
     ht->smallest = second_smallest;
 
+    /* Avança o novo nodo na lista caso a soma das ocorrências for maior */
     adjust_symbol_in_list(ht,second_smallest);
 
 	print_huffman_tree(ht);
-    break;
-  } while(1);
+    fflush(stdout);
+  }
 
   return 0;
 }

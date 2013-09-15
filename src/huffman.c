@@ -156,7 +156,7 @@ void print_huffman_tree(huffman_tree_t *ht) {
     if(list->node)
       print_huffman_node(list->node,0);
     else {
-	  printf("Leaf:%20X:%-5d\n",list->leaf->symbol,list->occurrence);
+	  printf("Leaf:%02X:%-5d\n",list->leaf->symbol,list->occurrence);
 	}
   }
 }
@@ -164,15 +164,21 @@ void print_huffman_tree(huffman_tree_t *ht) {
 int build_huffman_tree(huffman_tree_t *ht) {
   huffman_node_t *node;
   huffman_list_t *second_smallest;
-  int i;
 
-  for (i=0; i<50; i++) {
+  /* Itera até a lista de transformar numa árvore totalmente */
+  for (;;) {
     node = (huffman_node_t *) malloc(sizeof(huffman_node_t *));
     if(node == NULL)
       return -1;
 
     /* Guarda o símbolo com a segunda menor probabilidade na lista */
     second_smallest = ht->smallest->bigger;
+
+    /* Se a lista não contém o segundo menor, é porque todos os 
+         elementos estão na árvore, logo o algorítmo pode parar */
+    if(second_smallest == NULL) {
+      break;
+    }
 
     /* Atribui os dois nodos com menor probabilidade às duas folhas do 
          novo nodo */
@@ -194,8 +200,6 @@ int build_huffman_tree(huffman_tree_t *ht) {
     /* Avança o novo nodo na lista caso a soma das ocorrências for maior */
     adjust_symbol_in_list(ht,second_smallest);
 
-	print_huffman_tree(ht);
-    fflush(stdout);
   }
 
   return 0;
@@ -205,13 +209,8 @@ int create_huffman_tree(huffman_tree_t *ht, uint8_t *input, size_t len) {
   if(create_huffman_list(ht, input, len))
     return -1;
 
-  print_huffman_list(ht->list);
-  print_huffman_list_occ(ht);
-
   if(build_huffman_tree(ht))
     return -1;
 
   return 0;
 }
-
-

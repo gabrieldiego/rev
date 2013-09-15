@@ -82,6 +82,19 @@ int create_huffman_list(huffman_tree_t *ht, uint8_t *input, size_t len) {
   return 0;
 }
 
+/* Imprime as ocorrências de todos os simbolos em ordem de simbolo */
+int print_huffman_list(huffman_list_t *list) {
+  size_t i;
+  huffman_leaf_t *leaf;
+
+  for(i=0; i<256; i++) {
+    leaf = list[i].leaf;
+    printf("%5d",leaf->occurrence);
+    if (((i+1)%16) == 0)
+      printf("\n");
+  }
+}
+
 int assign_new_node(huffman_node_t **node, huffman_list_t *list) {
 
   if(list->node == NULL) {
@@ -182,6 +195,8 @@ int build_huffman_tree(huffman_tree_t *ht) {
 int create_huffman_tree(huffman_tree_t *ht, uint8_t *input, size_t len) {
   if(create_huffman_list(ht, input, len))
     return -1;
+
+  print_huffman_list(ht->list);
 
   if(build_huffman_tree(ht))
     return -1;

@@ -95,6 +95,17 @@ int print_huffman_list(huffman_list_t *list) {
   }
 }
 
+int print_huffman_list_occ(huffman_tree_t *ht) {
+  huffman_list_t *list;
+  int i=0;
+  for(list=ht->smallest; list!=NULL; list=list->bigger) {
+    printf("0x%02X:%-5d ",list->leaf->symbol,list->leaf->occurrence);
+    i++;
+    if (((i)%16) == 0)
+      printf("\n");
+  }
+}
+
 int assign_new_node(huffman_node_t **node, huffman_list_t *list) {
 
   if(list->node == NULL) {
@@ -197,6 +208,7 @@ int create_huffman_tree(huffman_tree_t *ht, uint8_t *input, size_t len) {
     return -1;
 
   print_huffman_list(ht->list);
+  print_huffman_list_occ(ht);
 
   if(build_huffman_tree(ht))
     return -1;

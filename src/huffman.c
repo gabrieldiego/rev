@@ -59,6 +59,7 @@ int create_huffman_list(huffman_tree_t *ht, uint8_t *input, size_t len) {
 
     ht->list[i].leaf->symbol = i;
     ht->list[i].leaf->prob = 0.0;
+
     ht->list[i].leaf->occurrence = 0;
 
     ht->list[i].smaller = ht->list+i-1;
@@ -184,41 +185,13 @@ void create_bitstrings(huffman_node_t *node, const char *prefix, int depth) {
       sprintf(new_prefix0,"%s0",prefix);
       sprintf(new_prefix1,"%s1",prefix);
 
-	  printf("%sNode   :%-5d\n",prefix,node->occurrence);
+//	  printf("%sNode   :%-5d\n",prefix,node->occurrence);
 	  create_bitstrings(node->n[0],new_prefix0,depth+1);
 	  create_bitstrings(node->n[1],new_prefix1,depth+1);
 	} else {
 //      node->leaf->bitstring = prefix;
-      printf("%sLeaf:%02X:%-5d\n",prefix,node->leaf->symbol,node->occurrence);
+//      printf("%sLeaf:%02X:%-5d\n",prefix,node->leaf->symbol,node->occurrence);
 	}
-  }
-}
-
-
-void create_bitstrings2(huffman_node_t *node, const char *prefix) {
-  int i;
-  /* Salva o prefixo no nodo atual */
-  node->prefix = prefix;
-
-  for(i=0; i<2; i++) {
-    if(node->n[i]) {
-    /* Se for um nodo, continua recursivamente */
-      char *new_prefix;
-      /* Aloca uma nova string de bits */
-      new_prefix = malloc(sizeof(char)*(strlen(prefix)+1));
-
-      /* Junta ao fim da string um bit */
-      sprintf(new_prefix,"%s%d",prefix,i);
-      printf("%s",new_prefix);
-	  printf("Node   :%-5d\n",node->n[i]->occurrence);
-      fflush(stdout);
-      create_bitstrings2(node->n[i],new_prefix);
-    } else {
-    /* Se for uma folha, ajusta a string de bits */
-      node->leaf->bitstring = prefix;
-      printf("%s",prefix);
-      printf("Leaf:%02X:%-5d\n",node->n[i]->leaf->symbol,node->n[i]->occurrence);
-    }
   }
 }
 
@@ -246,10 +219,11 @@ int build_huffman_tree(huffman_tree_t *ht) {
     assign_new_node(node->n+0, ht->smallest);
     assign_new_node(node->n+1, second_smallest);
 
-    /* Reusa o ponteiro do segundo menor nodo */
+    /* Reusa o ponteiro do segundo menor nodo, mas não apaga a folha */
+    /* A lista ainda será útil após para encontrar a string de bits */
     second_smallest->smaller = NULL;
     second_smallest->node = node;
-    second_smallest->leaf = NULL;
+//    second_smallest->leaf = NULL;
 
     node->occurrence = node->n[0]->occurrence + node->n[1]->occurrence;
     second_smallest->occurrence = node->occurrence;
@@ -270,7 +244,7 @@ int build_huffman_tree(huffman_tree_t *ht) {
   prefix = malloc(sizeof(char));
   prefix = 0;
 
-  print_huffman_tree(ht);
+//  print_huffman_tree(ht);
 
   create_bitstrings(ht->root,"",0);
 

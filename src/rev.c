@@ -57,9 +57,10 @@ int main(int argc, char **argv) {
       printf("%5d", ht.list[i+j].leaf->occurrence);
     }
     printf("|\n");
-
   }
 
+
+#if 0
   printf("\nOccurences in order:\n");
 
   huffman_list_t *list = ht.smallest;
@@ -73,6 +74,7 @@ int main(int argc, char **argv) {
     printf("|\n");
 
   }
+#endif
 
   printf("\nDPCM:\n");
 

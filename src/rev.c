@@ -58,7 +58,19 @@ int main(int argc, char **argv) {
     }
     printf("|\n");
   }
+  
+  printf("\n");
 
+  for(i=0; i<256; i+=16) {
+    printf("|");
+    for(j=0; j<16; j++) {
+      if(strlen(ht.list[i+j].leaf->bitstring)<=9)
+        printf("%9.9s", ht.list[i+j].leaf->bitstring);
+      else
+        printf("    longa");
+    }
+    printf("|\n");
+  }
 
 #if 0
   printf("\nOccurences in order:\n");

@@ -189,7 +189,7 @@ void create_bitstrings(huffman_node_t *node, const char *prefix, int depth) {
 	  create_bitstrings(node->n[0],new_prefix0,depth+1);
 	  create_bitstrings(node->n[1],new_prefix1,depth+1);
 	} else {
-//      node->leaf->bitstring = prefix;
+      node->leaf->bitstring = prefix;
 //      printf("%sLeaf:%02X:%-5d\n",prefix,node->leaf->symbol,node->occurrence);
 	}
   }

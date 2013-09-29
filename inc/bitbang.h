@@ -10,9 +10,11 @@ typedef struct {
   uint8_t byte_pos;
 } bitwrite_t;
 
-int create_bitwrite(bitwrite_t *bw, char *filename);
+int create_bitwrite(bitwrite_t *bw, const char *filename);
 
-int write_bit(bitwrite_t *bw, char bit);
+int write_bit(bitwrite_t *bw, const char bit);
+
+int write_bitstring(bitwrite_t *bw, const char *bitstring);
 
 int close_bitwrite(bitwrite_t *bw);
 

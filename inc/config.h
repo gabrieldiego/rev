@@ -7,6 +7,8 @@ typedef struct {
   FILE *input_file;
   FILE *output_file;
 
+  char *output_file_name;
+
   uint32_t h;
   uint32_t w;
   uint32_t pitch;

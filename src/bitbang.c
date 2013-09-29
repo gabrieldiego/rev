@@ -1,6 +1,6 @@
 #include "bitbang.h"
 
-int create_bitwrite(bitwrite_t *bw, char *filename) {
+int create_bitwrite(bitwrite_t *bw, const char *filename) {
   bw->file = fopen(filename,"wb");
 
   if(bw->file == NULL) {
@@ -45,6 +45,18 @@ int write_bit(bitwrite_t *bw, char bit) {
   return 0;
 }
 
+int write_bitstring(bitwrite_t *bw, const char *bitstring) {
+  int i=0;
+  while(bitstring[i] != 0) {
+    int res = write_bit(bw,bitstring[i]);
+    if(res) {
+      return res;
+    }
+    i++;
+  }
+  return 0;
+}
+
 int close_bitwrite(bitwrite_t *bw) {
   int i;
   for(i=0; i<8; i++) {
@@ -53,7 +65,7 @@ int close_bitwrite(bitwrite_t *bw) {
       bw->file = NULL;
       return 0;
     } else {
-      write_bit(bw,0);
+      write_bit(bw,'0');
     }
   }
   fprintf(stderr,"Não foi possível fechar o bitwrite");

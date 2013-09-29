@@ -4,6 +4,7 @@
 #include "image.h"
 #include "diff.h"
 #include "huffman.h"
+#include "bitbang.h"
 
 int main(int argc, char **argv) {
   int32_t  num_pixels=0;
@@ -41,6 +42,7 @@ int main(int argc, char **argv) {
   printf("height %d width %d pitch %d size %d\n",
     image.h,image.w,image.pitch,image.img_size);
 
+#if 0
   for(i=0; i<image.h*image.pitch; i+=image.pitch) {
     for(j=0; j<image.w; j++) {
       fwrite(image.buffer+i+j,1,1,config.output_file);
@@ -50,6 +52,7 @@ int main(int argc, char **argv) {
   }
 
   fclose(config.output_file);
+#endif
 
   for(i=0; i<256; i+=16) {
     printf("|");
@@ -72,6 +75,23 @@ int main(int argc, char **argv) {
     printf("|\n");
   }
 
+  bitwrite_t *bw = malloc(sizeof(bitwrite_t));
+
+  if(bw == NULL) {
+    exit(-1);
+  }
+
+  if(create_bitwrite(bw,config.output_file_name)) {
+    exit(-1);
+  }
+
+  for(i=0; i<image.img_size; i++) {
+    fprintf(stderr,"%s",ht.list[image.buffer[i]].leaf->bitstring);
+    write_bitstring(bw,ht.list[image.buffer[i]].leaf->bitstring);
+  }
+
+  exit(close_bitwrite(bw));
+
 #if 0
   printf("\nOccurences in order:\n");
 
@@ -88,6 +108,7 @@ int main(int argc, char **argv) {
   }
 #endif
 
+#if 0
   printf("\nDPCM:\n");
 
   for(i=0; i<256; i+=16) {
@@ -108,5 +129,6 @@ int main(int argc, char **argv) {
     printf("|\n");
   }
 
+#endif
   return 0;
 }

@@ -196,7 +196,20 @@ void create_bitstrings(huffman_node_t *node, const char *prefix, int depth) {
 
 int build_huffman_tree(huffman_tree_t *ht) {
   huffman_node_t *node;
+  huffman_list_t *l;
   huffman_list_t *second_smallest;
+
+  /* Descarta todos os símbolos com probabilidade nula */
+  for(l=ht->smallest; l!=NULL; l=l->bigger) {
+    if(l->occurrence == 0) {
+      ht->smallest = l->bigger;
+      /* Deixa uma string nula para o caso ela for verificada */
+      l->leaf->bitstring = "";
+    }
+  }
+
+  print_huffman_list_occ(ht);
+  fflush(stdout);
 
   /* Itera até a lista se transformar totalmente numa árvore */
   for (;;) {

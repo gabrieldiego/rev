@@ -1,13 +1,7 @@
 #include "bitbang.h"
 
-int create_bitwrite(bitwrite_t *bw, const char *filename) {
-  bw->file = fopen(filename,"wb");
-
-  if(bw->file == NULL) {
-    fprintf(stderr,"Não foi possível abrir %s\n",filename);
-    return -1;
-  }
-
+int create_bitwrite(bitwrite_t *bw, FILE *file) {
+  bw->file = file;
   bw->last_byte = 0;
   bw->byte_pos = 0;
 

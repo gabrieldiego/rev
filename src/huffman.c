@@ -171,7 +171,7 @@ void create_bitstrings(huffman_node_t *node, const char *prefix, int depth) {
   int i;
 
   if(node) {
-//    node->prefix = prefix;
+    node->prefix = prefix;
     if(node->n[0]) {
     /* Se for um nodo, continua recursivamente */
       char *new_prefix0,*new_prefix1;
@@ -191,7 +191,6 @@ void create_bitstrings(huffman_node_t *node, const char *prefix, int depth) {
       node->leaf->bitstring = prefix;
 	}
   }
-
 }
 
 int build_huffman_tree(huffman_tree_t *ht) {
@@ -207,9 +206,6 @@ int build_huffman_tree(huffman_tree_t *ht) {
       l->leaf->bitstring = "";
     }
   }
-
-  print_huffman_list_occ(ht);
-  fflush(stdout);
 
   /* Itera até a lista se transformar totalmente numa árvore */
   for (;;) {

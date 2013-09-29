@@ -22,14 +22,13 @@ int config_from_cmd_line(config_t *config, int argc, char **argv) {
   }
 
   config->output_file_name = argv[4];
-#if 0
   config->output_file = fopen(argv[4],"wb");
 
   if(config->output_file == NULL) {
-    fprintf(stderr,"Não foi possível abrir arquivo %s para escrita.\n",argv[4]);
-	return -1;
+    fprintf(stderr,"Não foi possível abrir arquivo %s para escrita.\n",
+            argv[4]);
+    return -1;
   }
-#endif
 
   return 0;
 }

@@ -67,8 +67,12 @@ int main(int argc, char **argv) {
   for(i=0; i<256; i+=16) {
     printf("|");
     for(j=0; j<16; j++) {
-      if(strlen(ht.list[i+j].leaf->bitstring)<=9)
-        printf("%9.9s", ht.list[i+j].leaf->bitstring);
+      int len = strlen(ht.list[i+j].leaf->bitstring);
+      if(len<=9)
+        if(len)
+          printf("%9.9s", ht.list[i+j].leaf->bitstring);
+        else
+          printf("     nula");
       else
         printf("    longa");
     }
@@ -81,7 +85,7 @@ int main(int argc, char **argv) {
     exit(-1);
   }
 
-  if(create_bitwrite(bw,config.output_file_name)) {
+  if(create_bitwrite(bw,config.output_file)) {
     exit(-1);
   }
 
@@ -104,7 +108,6 @@ int main(int argc, char **argv) {
       list = list->bigger;
     }
     printf("|\n");
-
   }
 #endif
 

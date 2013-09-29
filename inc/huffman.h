@@ -3,6 +3,7 @@
 
 #include "rev.h"
 #include "debug.h"
+#include "bitbang.h"
 
 #include <string.h>
 
@@ -48,5 +49,7 @@ typedef struct {
 } huffman_tree_t;
 
 int create_huffman_tree(huffman_tree_t *ht, uint8_t *input, size_t len);
+
+int write_huffman_tree_to_file(huffman_node_t *node, bitwrite_t *bw);
 
 #endif /* __HUFFMAN_H__ */

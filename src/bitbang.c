@@ -20,6 +20,7 @@ int write_bit(bitwrite_t *bw, char bit) {
       fprintf(stderr,"Bit inválido: %c\n",bit);
       return -1;
   }
+  printf("%c",bit);
 
   bw->byte_pos++;
 
@@ -35,6 +36,19 @@ int write_bit(bitwrite_t *bw, char bit) {
       bw->last_byte = 0;
       bw->byte_pos = 0;
     }
+  }
+  return 0;
+}
+
+int write_8bits(bitwrite_t *bw, uint8_t byte) {
+  int i;
+  for(i=0;i<8;i++) {
+    char bit = (byte & 0x80)?'1':'0';
+    int res = write_bit(bw,bit);
+    if(res) {
+      return res;
+    }
+    byte = byte << 1;
   }
   return 0;
 }

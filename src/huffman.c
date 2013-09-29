@@ -266,3 +266,18 @@ int create_huffman_tree(huffman_tree_t *ht, uint8_t *input, size_t len) {
 
   return 0;
 }
+
+int write_huffman_tree_to_file(huffman_node_t *node, bitwrite_t *bw) {
+  if(node) {
+    if(node->n[0]) {
+      /* Ainda não é uma folha, escreve um 0 */
+      write_bit(bw,'0');
+	  write_huffman_tree_to_file(node->n[0],bw);
+	  write_huffman_tree_to_file(node->n[1],bw);
+	} else {
+      /* É uma folha, logo escreve um 1 e o símbolo */
+      write_bit(bw,'1');
+      write_8bits(bw,node->leaf->symbol);
+	}
+  }
+}

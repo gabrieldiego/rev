@@ -89,8 +89,10 @@ int main(int argc, char **argv) {
     exit(-1);
   }
 
+  write_huffman_tree_to_file(ht.root,bw);
+
   for(i=0; i<image.img_size; i++) {
-    fprintf(stderr,"%s",ht.list[image.buffer[i]].leaf->bitstring);
+//    fprintf(stderr,"%s",ht.list[image.buffer[i]].leaf->bitstring);
     write_bitstring(bw,ht.list[image.buffer[i]].leaf->bitstring);
   }
 

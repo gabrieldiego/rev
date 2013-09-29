@@ -92,11 +92,14 @@ int main(int argc, char **argv) {
   write_huffman_tree_to_file(ht.root,bw);
 
   for(i=0; i<image.img_size; i++) {
-//    fprintf(stderr,"%s",ht.list[image.buffer[i]].leaf->bitstring);
     write_bitstring(bw,ht.list[image.buffer[i]].leaf->bitstring);
   }
 
-  exit(close_bitwrite(bw));
+  i = close_bitwrite(bw);
+  if(i) {
+    exit(i);
+  }
+
 
 #if 0
   printf("\nOccurences in order:\n");

@@ -185,14 +185,13 @@ void create_bitstrings(huffman_node_t *node, const char *prefix, int depth) {
       sprintf(new_prefix0,"%s0",prefix);
       sprintf(new_prefix1,"%s1",prefix);
 
-//	  printf("%sNode   :%-5d\n",prefix,node->occurrence);
 	  create_bitstrings(node->n[0],new_prefix0,depth+1);
 	  create_bitstrings(node->n[1],new_prefix1,depth+1);
 	} else {
       node->leaf->bitstring = prefix;
-//      printf("%sLeaf:%02X:%-5d\n",prefix,node->leaf->symbol,node->occurrence);
 	}
   }
+
 }
 
 int build_huffman_tree(huffman_tree_t *ht) {
@@ -201,7 +200,7 @@ int build_huffman_tree(huffman_tree_t *ht) {
 
   /* Itera até a lista se transformar totalmente numa árvore */
   for (;;) {
-    node = (huffman_node_t *) malloc(sizeof(huffman_node_t *));
+    node = (huffman_node_t *) malloc(sizeof(huffman_node_t));
     if(node == NULL)
       return -1;
 
@@ -244,11 +243,7 @@ int build_huffman_tree(huffman_tree_t *ht) {
   prefix = malloc(sizeof(char));
   prefix = 0;
 
-//  print_huffman_tree(ht);
-
   create_bitstrings(ht->root,"",0);
-
-//  print_huffman_tree(ht);
 
   return 0;
 }

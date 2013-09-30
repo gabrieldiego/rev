@@ -82,5 +82,41 @@ int close_bitwrite(bitwrite_t *bw) {
 int create_bitread(bitread_t *br, FILE *file) {
   br->file = file;
   br->last_byte = 0;
-  br->byte_pos = 8;
+  br->byte_pos = 0;
+}
+
+int read_bit(bitread_t *br, char *bit) {
+  if(br->byte_pos == 0) {
+    size_t res = fread(&(br->last_byte),1,1,br->file);
+    if(res == 0) {
+      fprintf(stderr,"Não foi possível ler do arquivo\n");
+      return -2;
+    } else {
+      br->last_byte = 0;
+      br->byte_pos = 7;
+    }
+  }
+  *bit = (br->last_byte & (1<<br->byte_pos))?'1':'0';
+  return 0;
+}
+
+int read_8bits(bitread_t *br, uint8_t *byte) {
+  char bit;
+  int i;
+  *byte = 0;
+
+  for(i=0;i<8;i++) {
+    if(read_bit(br,&bit)) {
+      return -1;
+    }
+    switch (bit) {
+      case '0':
+        *byte = (*byte << 1);
+        break;
+      case '1':
+        *byte = (*byte << 1) + 1;
+        break;
+    }
+  }
+  return 0;
 }

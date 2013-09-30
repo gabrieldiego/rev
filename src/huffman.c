@@ -281,3 +281,7 @@ int write_huffman_tree_to_file(huffman_node_t *node, bitwrite_t *bw) {
 	}
   }
 }
+
+int read_huffman_tree_from_file(huffman_tree_t *ht, bitread_t *br) {
+  return 0;
+}

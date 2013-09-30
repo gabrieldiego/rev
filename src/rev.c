@@ -100,6 +100,24 @@ int main(int argc, char **argv) {
     exit(i);
   }
 
+  bitread_t br;
+  fclose(config.output_file);
+  config.output_file = fopen(config.output_file_name,"rb");
+  
+  create_bitread(&br,config.output_file);
+
+  FILE *rebuilt_file;
+
+  rebuilt_file = fopen("test.yuv","wb");
+  if (rebuilt_file == NULL) {
+    fprintf(stderr,"Não foi possível abrir arquivo test.yuv");
+    exit(-1);
+  }
+
+  for(i=0; i<image.img_size; i++) {
+    ;
+  }
+
 
 #if 0
   printf("\nOccurences in order:\n");

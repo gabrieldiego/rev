@@ -283,5 +283,32 @@ int write_huffman_tree_to_file(huffman_node_t *node, bitwrite_t *bw) {
 }
 
 int read_huffman_tree_from_file(huffman_tree_t *ht, bitread_t *br) {
+  char is_leaf;
+  int i;
+
+  for(i=0;i<10;i++) {
+    /* Verificar porque só lê zeros */
+    if(read_bit(br,&is_leaf)) {
+      fprintf(stderr,"Não foi possível ler arquivo.\n");
+      return -1;
+    }
+    printf("is_leaf: %c\n",is_leaf);
+  }
+
+  return 0;
+
+  if(is_leaf == '0') {
+    /* Não é uma folha, precisa ler recursivamente */
+    printf("0");
+    read_huffman_tree_from_file(ht,br);
+    printf("1");
+    read_huffman_tree_from_file(ht,br);
+  } else {
+    /* É uma folha, ler os bits do símbolo */
+    uint8_t byte;
+    read_8bits(br,&byte);
+    printf("0x%02X ",byte);
+  }
+
   return 0;
 }

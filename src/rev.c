@@ -101,10 +101,12 @@ int main(int argc, char **argv) {
   }
 
   bitread_t br;
-  fclose(config.output_file);
   config.output_file = fopen(config.output_file_name,"rb");
-  
   create_bitread(&br,config.output_file);
+
+  huffman_tree_t ht2;
+
+  read_huffman_tree_from_file(&ht2,&br);
 
   FILE *rebuilt_file;
 
@@ -113,6 +115,10 @@ int main(int argc, char **argv) {
     fprintf(stderr,"Não foi possível abrir arquivo test.yuv");
     exit(-1);
   }
+
+  /* TODO */
+  exit(0);
+
 
   for(i=0; i<image.img_size; i++) {
     ;

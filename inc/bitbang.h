@@ -31,6 +31,6 @@ int create_bitread(bitread_t *br, FILE *file);
 
 int read_bit(bitread_t *br, char *bit);
 
-int read_8bits(bitread_t *br, uint8_t byte);
+int read_8bits(bitread_t *br, uint8_t *byte);
 
 #endif /* __BITBANG_H__ */

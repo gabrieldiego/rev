@@ -92,11 +92,13 @@ int read_bit(bitread_t *br, char *bit) {
       fprintf(stderr,"Não foi possível ler do arquivo\n");
       return -2;
     } else {
-      br->last_byte = 0;
       br->byte_pos = 7;
     }
   }
+
   *bit = (br->last_byte & (1<<br->byte_pos))?'1':'0';
+
+  br->byte_pos--;
   return 0;
 }
 

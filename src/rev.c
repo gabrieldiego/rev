@@ -102,6 +102,12 @@ int main(int argc, char **argv) {
 
   bitread_t br;
   config.output_file = fopen(config.output_file_name,"rb");
+
+  if(config.output_file==NULL) {
+    fprintf(stderr,"Não foi possível abrir arquivo %s",config.output_file_name);
+    exit(-1);
+  }
+  
   create_bitread(&br,config.output_file);
 
   huffman_tree_t ht2;

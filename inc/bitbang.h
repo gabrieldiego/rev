@@ -7,7 +7,7 @@
 typedef struct {
   FILE *file;
   uint8_t last_byte;
-  uint8_t byte_pos;
+  int8_t byte_pos;
 } bitwrite_t;
 
 typedef struct {
